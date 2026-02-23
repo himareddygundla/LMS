@@ -1,0 +1,6 @@
+studentId,name,attendancePercent,avgMarks,status
+1,Asha,85.0,78.0,PASS
+2,Ravi,60.0,45.0,FAIL
+3,Kiran,95.0,90.0,PASS
+4,Meena,0.0,0.0,FAIL
+5,Ravi,60.0,45.0,FAIL
