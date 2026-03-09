@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="module-grid two-col">
+  <article class="card panel">
+    <h2>Create Event</h2>
+    <form id="eventCreateForm">
+      <label>Title<input name="title" required /></label>
+      <label>Description<textarea name="description"></textarea></label>
+      <div class="form-row">
+        <label>Location<input name="location" required /></label>
+        <label>Date<input name="date" placeholder="2026-03-20 10:00 AM" required /></label>
+      </div>
+      <div class="form-row">
+        <label>Capacity<input name="capacity" type="number" min="1" required /></label>
+        <label>Trainer ID<input name="trainer_id" type="number" /></label>
+      </div>
+      <div class="form-actions"><button class="btn-primary" type="submit">Create Event</button></div>
+    </form>
+  </article>
+
+  <article class="card panel">
+    <h2>Update Event</h2>
+    <form id="eventUpdateForm">
+      <label>Event ID<input name="id" type="number" required /></label>
+      <label>Title<input name="title" /></label>
+      <label>Description<textarea name="description"></textarea></label>
+      <div class="form-row">
+        <label>Location<input name="location" /></label>
+        <label>Date<input name="date" /></label>
+      </div>
+      <div class="form-row">
+        <label>Capacity<input name="capacity" type="number" min="1" /></label>
+        <label>Trainer ID<input name="trainer_id" type="number" /></label>
+      </div>
+      <div class="form-actions"><button class="btn-primary" type="submit">Update Event</button></div>
+    </form>
+  </article>
+
+  <article class="card panel">
+    <h2>Delete Event</h2>
+    <form id="eventDeleteForm">
+      <label>Event ID<input name="id" type="number" required /></label>
+      <div class="form-actions"><button class="btn-danger" type="submit">Delete Event</button></div>
+    </form>
+  </article>
+
+  <article class="card panel accent-card">
+    <h2>Manage Capacity</h2>
+    <p>Update an event with a new capacity value whenever seats change. Capacity is also checked during participant registration.</p>
+    <p class="small">Tip: use the Update Event form to change title, date, location, trainer assignment, or capacity.</p>
+  </article>
+</section>
+
+<section class="card panel">
+  <div class="section-head">
+    <div>
+      <h2>Events List</h2>
+      <p class="small">View current event details, assigned trainer IDs, and maximum capacity.</p>
+    </div>
+    <button class="btn-secondary" onclick="loadEventsPage()">Refresh</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ID</th><th>Title</th><th>Description</th><th>Date</th><th>Location</th><th>Capacity</th><th>Trainer ID</th></tr></thead>
+      <tbody id="eventsTable"></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  async function loadEventsPage() {
+    await Promise.all([loadDashboardSummary(), loadEvents()]);
+  }
+
+  document.getElementById('eventCreateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await api('/api/events', { method: 'POST', body: JSON.stringify(formDataToJson(e.target)) });
+      e.target.reset(); showToast('Event created'); loadEventsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  document.getElementById('eventUpdateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = formDataToJson(e.target); const id = data.id; delete data.id;
+    try {
+      await api(`/api/events/${id}`, { method: 'PUT', body: JSON.stringify(cleanEmptyFields(data)) });
+      e.target.reset(); showToast('Event updated'); loadEventsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  document.getElementById('eventDeleteForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = new FormData(e.target).get('id');
+    try {
+      await api(`/api/events/${id}`, { method: 'DELETE' });
+      e.target.reset(); showToast('Event deleted'); loadEventsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  loadEventsPage();
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    container_name: event-platform-app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:///./event_management.db
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DB_NAME: event_platform
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    container_name: event-platform-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

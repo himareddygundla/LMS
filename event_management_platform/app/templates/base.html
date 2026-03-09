@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }} | {{ page_title }}</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark">E</span>
+        <div>
+          <strong>{{ app_name }}</strong>
+          <small>Event Management Platform</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/participants">Participants</a>
+        <a href="/trainers">Trainers</a>
+        <a href="/events">Events</a>
+        <a href="/docs">API Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-shell">
+    <section class="page-hero card">
+      <div>
+        <span class="badge">Modern fullstack frontend</span>
+        <h1>{{ page_title }}</h1>
+        <p>{{ page_subtitle }}</p>
+      </div>
+      <div class="quick-stats" id="summaryCards">
+        <div class="mini-stat"><span>Participants</span><strong id="participantsCount">0</strong></div>
+        <div class="mini-stat"><span>Trainers</span><strong id="trainersCount">0</strong></div>
+        <div class="mini-stat"><span>Events</span><strong id="eventsCount">0</strong></div>
+        <div class="mini-stat"><span>Registrations</span><strong id="registrationsCount">0</strong></div>
+      </div>
+    </section>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="footer">Built with FastAPI, SQLAlchemy, MongoDB logging, Docker, Pytest, and GitHub Actions.</div>
+  <div class="toast" id="toast"></div>
+  <script src="/static/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

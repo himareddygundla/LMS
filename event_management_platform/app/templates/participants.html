@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="module-grid two-col">
+  <article class="card panel">
+    <h2>Register Participant</h2>
+    <form id="participantCreateForm">
+      <label>Name<input name="name" required /></label>
+      <label>Email<input name="email" type="email" required /></label>
+      <div class="form-row">
+        <label>Phone<input name="phone" /></label>
+        <label>Company<input name="company" /></label>
+      </div>
+      <div class="form-actions"><button class="btn-primary" type="submit">Save Participant</button></div>
+    </form>
+  </article>
+
+  <article class="card panel">
+    <h2>Update Participant Profile</h2>
+    <form id="participantUpdateForm">
+      <label>Participant ID<input name="id" type="number" required /></label>
+      <label>Name<input name="name" /></label>
+      <label>Email<input name="email" type="email" /></label>
+      <div class="form-row">
+        <label>Phone<input name="phone" /></label>
+        <label>Company<input name="company" /></label>
+      </div>
+      <div class="form-actions"><button class="btn-primary" type="submit">Update Participant</button></div>
+    </form>
+  </article>
+
+  <article class="card panel">
+    <h2>Delete Participant</h2>
+    <form id="participantDeleteForm">
+      <label>Participant ID<input name="id" type="number" required /></label>
+      <div class="form-actions"><button class="btn-danger" type="submit">Delete Participant</button></div>
+    </form>
+  </article>
+
+  <article class="card panel">
+    <h2>Register Participant for Event</h2>
+    <form id="registrationForm">
+      <div class="form-row">
+        <label>Participant ID<input name="participant_id" type="number" required /></label>
+        <label>Event ID<input name="event_id" type="number" required /></label>
+      </div>
+      <div class="form-actions"><button class="btn-primary" type="submit">Register for Event</button></div>
+    </form>
+  </article>
+</section>
+
+<section class="card panel">
+  <div class="section-head">
+    <div>
+      <h2>Participants List</h2>
+      <p class="small">View all registered participants from the SQL database.</p>
+    </div>
+    <button class="btn-secondary" onclick="loadParticipantsPage()">Refresh</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Company</th></tr></thead>
+      <tbody id="participantsTable"></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  async function loadParticipantsPage() {
+    await Promise.all([loadDashboardSummary(), loadParticipants()]);
+  }
+
+  document.getElementById('participantCreateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await api('/api/participants', { method: 'POST', body: JSON.stringify(formDataToJson(e.target)) });
+      e.target.reset(); showToast('Participant created'); loadParticipantsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  document.getElementById('participantUpdateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = formDataToJson(e.target); const id = data.id; delete data.id;
+    try {
+      await api(`/api/participants/${id}`, { method: 'PUT', body: JSON.stringify(cleanEmptyFields(data)) });
+      e.target.reset(); showToast('Participant updated'); loadParticipantsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  document.getElementById('participantDeleteForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = new FormData(e.target).get('id');
+    try {
+      await api(`/api/participants/${id}`, { method: 'DELETE' });
+      e.target.reset(); showToast('Participant deleted'); loadParticipantsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await api('/api/participants/register', { method: 'POST', body: JSON.stringify(formDataToJson(e.target)) });
+      e.target.reset(); showToast('Participant registered for event'); loadParticipantsPage();
+    } catch (err) { showToast(err.message, true); }
+  });
+
+  loadParticipantsPage();
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="dashboard-grid">
+  <article class="card panel feature-card feature-blue">
+    <h2>Participants</h2>
+    <p>Register participants, update profiles, delete records, and connect them to event registrations.</p>
+    <ul class="feature-list">
+      <li>Create participant profiles</li>
+      <li>Update or delete participants</li>
+      <li>Register participants for events</li>
+    </ul>
+    <a class="button btn-primary" href="/participants">Open Participants Page</a>
+  </article>
+
+  <article class="card panel feature-card feature-purple">
+    <h2>Trainers</h2>
+    <p>Add expert trainers, update trainer profiles, assign them to events, and view session schedules.</p>
+    <ul class="feature-list">
+      <li>Add and update trainers</li>
+      <li>Assign trainer to event</li>
+      <li>View sessions with trainer details</li>
+    </ul>
+    <a class="button btn-primary" href="/trainers">Open Trainers Page</a>
+  </article>
+
+  <article class="card panel feature-card feature-pink">
+    <h2>Events</h2>
+    <p>Create events, manage capacities, update schedules, and delete events whenever needed.</p>
+    <ul class="feature-list">
+      <li>Create and update events</li>
+      <li>Delete events safely</li>
+      <li>Track capacity and trainer assignment</li>
+    </ul>
+    <a class="button btn-primary" href="/events">Open Events Page</a>
+  </article>
+</section>
+
+<section class="card panel summary-panel">
+  <div class="section-head">
+    <div>
+      <h2>Project Workflow</h2>
+      <p class="small">From participant registration to trainer assignment and event capacity tracking.</p>
+    </div>
+    <button class="btn-secondary" onclick="loadDashboardSummary()">Refresh Summary</button>
+  </div>
+  <div class="workflow-grid">
+    <div class="workflow-step"><span>1</span><h3>Create participants</h3><p>Add users who will attend events.</p></div>
+    <div class="workflow-step"><span>2</span><h3>Add trainers</h3><p>Create subject experts and prepare them for sessions.</p></div>
+    <div class="workflow-step"><span>3</span><h3>Create events</h3><p>Define location, date, capacity, and trainer allocation.</p></div>
+    <div class="workflow-step"><span>4</span><h3>Run assignments</h3><p>Register participants and assign trainers to sessions.</p></div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  loadDashboardSummary();
+</script>
+{% endblock %}
